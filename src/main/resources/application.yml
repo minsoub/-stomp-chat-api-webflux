@@ -1,0 +1,145 @@
+spring:
+  config:
+    import: classpath:springdoc.yml
+  profiles:
+    active: local # dev environment
+  security:
+    debug: true
+  main:
+    allow-bean-definition-overriding: true
+  devtools:
+    restart:
+      enabled: false
+  data:
+    mongodb:
+      auto-index-creation: true
+      uuid-representation: standard
+      field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
+  redis:
+    port: 6379
+    host: localhost
+#  mvc: #Swagger
+#    pathmatch:
+#      matching-strategy: ANT_PATH_MATCHER
+  jwt:
+    secret: Q31NS56sal354sgyHJj1qwEkR3ycYUeR4uUAtX7WJraB7EN2O1DVM4yMyYuHxMEbSF5eXyYJkal1u4eqgB0F7Bq4A
+chat:
+  manager:
+    public-routes: /webjars/**,/actuator/**,/pingpong/**,/webjars/swagger-ui/**,/favicon.ico,/swagger-ui.html,/api-docs/**,/ws/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics, prometheus, health
+application:
+  version: /v1
+  prefix: /api
+  exclude-prefix-path: springdoc
+
+server:
+  port: 9090
+  servlet:
+    session:
+      timeout: 50m
+  http2:
+    enabled: true
+  shutdown: graceful
+
+# 추후 분리 필요 (리전별)
+
+---
+# local environment
+spring:
+  config:
+    activate:
+      on-profile: local
+  data:
+    mongodb:
+      host: xxx.xxxx.xxx.xxx
+      port: 27017
+      database: livechatdb
+      username: xxxx
+      password: xxxx!@#$
+  sso:
+    auth-url: https://auth-url
+    client-id: test
+    client-secret: $2a$10$kNKnyezbxubmwsrOGmBpf.lbfIH/J.RZwc0U3SbqFHTb18u.PHlB.
+# log4jdbc, Mybatis Console Log
+logging:
+  level:
+    root: DEBUG
+    com:
+      zaxxer:
+        hikari: INFO
+    javax:
+      sql:
+        DataSource: OFF
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      resultsettable: INFO  #SQL 결과 데이터 Table을 로그로 남긴다.
+      sqlonly: OFF     #SQL만 로그로 남긴다.
+      sqltiming: INFO    #SQL과 소요시간을 표기한다.
+      connection : OFF  # 커넥션 확인가능
+    org:
+      springframework.jdbc.datasource.DataSourceTransactionManager: INFO
+      hibernate:
+        SQL: INFO
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+    io:
+      lettuce:
+        core:
+          protocol: INFO
+    hikari:
+      HikariConfig: INFO
+
+---
+# dev environment
+spring:
+  config:
+    activate:
+      on-profile: dev
+  data:
+    mongodb:
+      host: xxx.xxxx.xxx.xxx
+      port: 27017
+      database: livechatdb
+      username: xxxx
+      password: xxxx!@#$
+  sso:
+    auth-url: https://auth-url
+    client-id: test
+    client-secret: $2a$10$kNKnyezbxubmwsrOGmBpf.lbfIH/J.RZwc0U3SbqFHTb18u.PHlB.
+# log4jdbc, Mybatis Console Log
+logging:
+  config: classpath:logback-spring-dev.xml
+  level:
+    com:
+      zaxxer:
+        hikari: INFO
+    javax:
+      sql:
+        DataSource: OFF
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      resultsettable: INFO  #SQL 결과 데이터 Table을 로그로 남긴다.
+      sqlonly: OFF     #SQL만 로그로 남긴다.
+      sqltiming: INFO    #SQL과 소요시간을 표기한다.
+      connection : OFF  # 커넥션 확인가능
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+    io:
+      lettuce:
+        core:
+          protocol: ERROR
+---

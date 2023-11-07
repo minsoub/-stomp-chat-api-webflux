@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fantoo-app-api
+  name: fantoo-app-api
+  namespace: NAMESPACE
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fantoo-app-api
+  template:
+    metadata:
+      labels:
+        app: fantoo-app-api
+    spec:
+      containers:
+        - name: fantoo-app-api
+          image: OCI_REGISTRY_URI
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ocir-secret
